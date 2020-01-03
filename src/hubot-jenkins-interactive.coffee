@@ -18,12 +18,12 @@
 
 { createMessageAdapter } = require('@slack/interactive-messages')
 slackMessages = createMessageAdapter(process.env.HUBOT_SLACK_VERIFICATION_TOKEN)
-jenkins = require('jenkins')({ baseUrl: process.env.HUBOT_JENKINS_URL, crumbIssuer: true });
+jenkins = require('jenkins')({ baseUrl: process.env.HUBOT_JENKINS_URL, crumbIssuer: false });
 
 module.exports = (robot) ->
   robot.respond /j(?:enkins)? build$/i, (res) ->
     jenkins.job.list (err, data) ->
-      if err 
+      if err
         res.send "error: #{err.message}"
         return
 
@@ -63,14 +63,14 @@ module.exports = (robot) ->
       if !jobs.length
         res.send "no job exists."
       else
-        res.send 
+        res.send
           text: "Jenkins job list",
           attachments: [ attachment ]
 
   robot.respond /j(?:enkins)? build ([\w\.\-_ ]+)(, (.+))?/i, (res) ->
     job = res.match[1]
     jenkins.job.build job, (err, data) ->
-      if err 
+      if err
         res.send "error: #{err.message}"
         return
       res.send "#{job} job is started by #{res.message.user.name}"
@@ -81,11 +81,11 @@ module.exports = (robot) ->
   slackMessages.action 'jenkins.job.build', (payload, res) ->
     action = payload.actions[0]
     select = action.selected_options[0]
-    
+
     robot.logger.debug 'handle welcome action with payload: ' + payload
 
     jenkins.job.build select.value, (err, data) ->
-      if err 
+      if err
         res text: "error: #{err.message}"
         return
       res text: "#{select.value} job is started by #{payload.user.name}"
