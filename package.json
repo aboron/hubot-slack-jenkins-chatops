@@ -28,7 +28,7 @@
     "jenkins": "^0.20.1"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": ">=0.10.x"
   },
   "main": "index.coffee",
   "homepage": "https://github.com/subicura/hubot-slack-jenkins-chatops"
